@@ -3,9 +3,9 @@ from html import escape
 from pathlib import Path
 from urllib.parse import quote
 
+import gdown
 import numpy as np
 import pandas as pd
-import gdown
 import plotly.express as px
 import plotly.graph_objects as go
 import pydeck as pdk
@@ -276,13 +276,10 @@ def asignar_zona(df):
 
 # Datos
 @st.cache_data(show_spinner="Cargando el DENUE...")
-def obtener_denue():
-    ruta = Path(__file__).parent / ARCHIVO_DENUE
-    if not ruta.exists():
-        ruta = Path("/tmp") / ARCHIVO_DENUE
-        if not ruta.exists():
-            gdown.download(id="1d2RVJc9WkRJTMiEM9Hf0Jv8rtGi-d7r6", output=str(ruta), quiet=False)
-    return cargar_denue(str(ruta))
+def cargar_denue(origen):
+    df = pd.read_csv(origen, encoding="latin1", low_memory=False)
+    df = df[df["municipio"].astype(str).str.strip().str.lower() == "mérida"].copy()
+    df["codigo_act"] = df["codigo_act"].astype(str)
 
     def clasificar(codigo):
         for nombre, prefijos in INDUSTRIAS.items():
@@ -302,15 +299,11 @@ def obtener_denue():
 
 
 def obtener_denue():
-    ruta = Path("/tmp") / ARCHIVO_DENUE
-
+    ruta = Path(__file__).parent / ARCHIVO_DENUE
     if not ruta.exists():
-        gdown.download(
-            id="1d2RVJc9WkRJTMiEM9Hf0Jv8rtGi-d7r6",
-            output=str(ruta),
-            quiet=False
-        )
-
+        ruta = Path("/tmp") / ARCHIVO_DENUE
+        if not ruta.exists():
+            gdown.download(id="1d2RVJc9WkRJTMiEM9Hf0Jv8rtGi-d7r6", output=str(ruta), quiet=False)
     return cargar_denue(str(ruta))
 
 
