@@ -302,14 +302,16 @@ def obtener_denue():
 
 
 def obtener_denue():
-    ruta = Path(__file__).parent / ARCHIVO_DENUE
-    if ruta.exists():
-        return cargar_denue(str(ruta))
-    st.warning(f"No encontré {ARCHIVO_DENUE} junto a app.py. Súbelo aquí para continuar.")
-    archivo = st.file_uploader("Archivo del DENUE (csv)", type="csv")
-    if archivo is None:
-        st.stop()
-    return cargar_denue(archivo)
+    ruta = Path("/tmp") / ARCHIVO_DENUE
+
+    if not ruta.exists():
+        gdown.download(
+            id="1d2RVJc9WkRJTMiEM9Hf0Jv8rtGi-d7r6",
+            output=str(ruta),
+            quiet=False
+        )
+
+    return cargar_denue(str(ruta))
 
 
 def competidor_cercano(g):
