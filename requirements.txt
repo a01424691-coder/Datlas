@@ -5,3 +5,4 @@ plotly
 pydeck
 scikit-learn
 h3
+gdown
